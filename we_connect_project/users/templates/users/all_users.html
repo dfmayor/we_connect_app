@@ -1,0 +1,22 @@
+{% extends 'users/base.html' %}
+
+{% block title %}All Users{% endblock title %}
+
+{% block header %}
+  <h2 class="text-center">All Users List - {{ users.count }} </h2>
+  {% if messages %}
+    <div class="alert {% if messages.tags == 'error' %}alert-danger{% else %}alert-success{% endif %}" role="alert">
+      {% for message in messages %}
+        <p class="text-center">{{ message }}</p>
+      {% endfor %}
+    </div>
+  {% endif %}
+{% endblock header %}
+
+{% block content %}
+  <div class="list-group">
+    {% for user in users %}
+      <a href="{% url 'users:others_profile' user.id %}" class="list-group-item list-group-item-action">{{ user.first_name }} {{ user.last_name}}</a>
+    {% endfor %}
+  </div>
+{% endblock content %}

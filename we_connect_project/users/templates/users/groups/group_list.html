@@ -1,0 +1,33 @@
+{% extends 'users/base.html' %}
+
+{% block title %}Group List Page{% endblock title %}
+
+{% block header %}
+  <h2 class="text-center">All Available User Groups</h2>
+  {% if messages %}
+    <div class="alert {% if messages.tags == 'error' %}alert-danger{% else %}alert-success{% endif %}" role="alert">
+      {% for message in messages %}
+        <p class="text-center">{{ message }}</p>
+      {% endfor %}
+    </div>
+  {% endif %}
+{% endblock header %}
+
+{% block content %}
+  {% if groups %}
+    <h1>Available Groups</h1>
+    <div class="list-group">
+      {% for group in groups %}
+        <button type="button" class="list-group-item list-group-item-action">
+          <a href="{% url 'users:group_users' group.name %}" class="list-group-item list-group-item-action ">{{ group.name }}</a>
+        </button>
+      {% endfor %}
+    </div>
+
+    <a class="link-offset-2 link-offset-3-hover link-underline link-underline-opacity-0 link-underline-opacity-75-hover" href="{% url 'users:new_group' %}">Add More User Groups</a>
+  {% else %}
+    <p>No groups found.</p>
+    <a class="link-offset-2 link-offset-3-hover link-underline link-underline-opacity-0 link-underline-opacity-75-hover" href="{% url 'users:new_group' %}">Create A User Group</a>
+  {% endif %}
+
+{% endblock content %}

@@ -1,0 +1,81 @@
+{% extends 'users/base.html' %}
+{% load static %}
+
+{% block title %}Service Page{% endblock title %}
+
+{% block header %}
+  {% if messages %}
+    <div class="alert {% if messages.tags == 'error' %}alert-danger{% else %}alert-success{% endif %}" role="alert">
+      {% for message in messages %}
+        <p class="text-center">{{ message }}</p>
+      {% endfor %}
+    </div>
+  {% endif %}
+  <h2 class="text-center">Create a service or product to sell</h2>
+{% endblock header %}
+
+{% block content %}
+  <form action="" method="post" enctype="multipart/form-data">
+    {% csrf_token %}
+    <p>Choose category for your service:</p>
+    {% for category in categories %}
+      <div class="form-check form-check-inline mb-3">
+        <input class="form-check-input" type="checkbox" id="inlineCheckbox1" name="categories" value="{{ category.id }}">
+        <label class="form-check-label" for="inlineCheckbox1">{{ category.name }}</label>
+      </div>
+    {% endfor %}
+
+    <div class="input-group mb-3">
+      <span class="input-group-text">
+        <i class="fa-solid fa-closed-captioning"></i>
+      </span>
+      <input type="text" name="title" class="form-control" placeholder="Title of your service" maxlength="100" required>
+    </div>
+
+    <div class="input-group mb-3">
+      <span class="input-group-text">
+        <i class="fa-solid fa-pencil"></i>
+      </span>
+      <textarea name="description" placeholder="Give all details about your service/product ..." class="form-control" aria-label="With textarea" rows="5" cols="8" required></textarea>
+    </div>
+
+    <div class="input-group mb-3">
+      <input type="file" id="image-input" accept="image/*" name="picture" >
+    </div>
+
+    <div class="input-group mb-3 image-style">
+      <div id="image-preview"></div>
+    </div>
+
+    <div class="input-group mb-3">
+      <span class="input-group-text">
+        <i class="fa-solid fa-naira-sign"></i>
+      </span>
+      <input type="number" name="price" class="form-control" placeholder="Price for the service (numbers only)" required>
+    </div>
+
+    <div class="input-group mb-3">
+      <select class="form-select" aria-label="Default select example" name="duration_unit">
+        <option disabled selected>I will deliver in ...</option>
+        <option value="hours">Hour</option>
+        <option value="days">Day</option>
+        <option value="weeks">Week</option>
+        <option value="months">Month</option>
+      </select>
+    </div>
+
+    <div class="input-group mb-3">
+      <span class="input-group-text">
+        <i class="fa-solid fa-clock"></i>
+      </span>
+      <input type="number" name="duration_quantity" class="form-control" placeholder="How many hours/days/weeks/months?" required>
+    </div>
+
+    <button type="submit" class="btn btn-success">Create Service</button>
+  </form>
+{% endblock content %}
+
+{% block js %}
+  <script src="{% static 'js/image_preview.js' %}"></script>
+  <script src="{% static 'js/countCharacters.js' %}"></script>
+{% endblock js %}

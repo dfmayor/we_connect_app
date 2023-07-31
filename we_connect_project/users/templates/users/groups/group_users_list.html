@@ -1,0 +1,30 @@
+{% extends 'users/base.html' %}
+
+{% block title %}Group Users List Page{% endblock title %}
+
+{% block header %}
+  <h2 class="text-center">Users Having The same Group</h2>
+  {% if messages %}
+    <div class="alert {% if messages.tags == 'error' %}alert-danger{% else %}alert-success{% endif %}" role="alert">
+      {% for message in messages %}
+        <p class="text-center">{{ message }}</p>
+      {% endfor %}
+    </div>
+  {% endif %}
+{% endblock header %}
+
+{% block content %}
+  {% if users %}
+    <h1>Users in '{{ group_name }}' Group - {{ users.count }}:</h1>
+    <div class="list-group">
+      {% for user in users %}
+        <button type="button" class="list-group-item list-group-item-action">
+          <a href="{% url 'users:others_profile' user.id %}" class="list-group-item list-group-item-action ">{{ user.username }} - {{ user.email }}</a>
+        </button>
+      {% endfor %}
+    </div>
+  {% else %}
+    <p>No users found.</p>
+  {% endif %}
+
+{% endblock content %}

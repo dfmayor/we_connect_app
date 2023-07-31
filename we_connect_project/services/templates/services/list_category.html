@@ -1,0 +1,28 @@
+{% extends 'users/base.html' %}
+
+{% block title %}All Categories{% endblock title %}
+
+{% block header %}
+  <h2 class="text-center">All Category List - {{ categories.count }} </h2>
+  {% if messages %}
+    <div class="alert {% if messages.tags == 'error' %}alert-danger{% else %}alert-success{% endif %}" role="alert">
+      {% for message in messages %}
+        <p class="text-center">{{ message }}</p>
+      {% endfor %}
+    </div>
+  {% endif %}
+{% endblock header %}
+
+{% block content %}
+  {% if categories %}
+    <ul class="list-group">
+      {% for category in categories %}
+        <li class="list-group-item">{{ category.name }}</li>
+      {% endfor %}
+    </ul>
+    <a class="link-offset-2 link-offset-3-hover link-underline link-underline-opacity-0 link-underline-opacity-75-hover" href="{% url 'services:add_category' %}">Add New Category</a>
+  {% else %}
+    <p>No categories found.</p>
+    <a class="link-offset-2 link-offset-3-hover link-underline link-underline-opacity-0 link-underline-opacity-75-hover" href="{% url 'services:add_category' %}">Add Category</a>
+  {% endif %}
+{% endblock content %}

@@ -1,0 +1,114 @@
+{% extends 'users/base.html' %}
+{% load static %}
+
+{% block title %}Service Detail Page{% endblock title %}
+
+{% block header %}
+  {% if messages %}
+    <div class="alert {% if messages.tags == 'error' %}alert-danger{% else %}alert-success{% endif %}" role="alert">
+      {% for message in messages %}
+        <p class="text-center">{{ message }}</p>
+      {% endfor %}
+    </div>
+  {% endif %}
+{% endblock header %}
+
+{% block content %}
+<div class=" container card">
+  <img src="{{ service.picture.url }}" class="card-img-top" alt="..." style="height: 600px; object-fit: cover;">
+  <div class="card-body">
+    <h5 class="card-title">{{ service.title}}</h5>
+    <div style="display: flex; justify-content: space-between;">
+      <h6 class="card-subtitle text-body-secondary text-start">{{ service.user.user.username}}</h6>
+      <div style="display: flex; flex-direction: row;">
+        <div class="card-subtitle text-body-secondary text-end rating-container"></div>
+        <p>{{ service.average_rating }} ({{ service.total_reviews }})</p>
+      </div>
+    </div>
+    <p class="card-text">Some quick example text to build on the card title and make up the bulk of the card's content.</p>
+    <a href="#" class="card-link" id="add_review" data-bs-toggle="modal" data-bs-target="#addReviewModal">Add Review</a>
+    {% if order_exists %}
+      <p class='card-link'>Service Requested</p>
+    {% else %}
+      <a href="#" id="requestLink" class="card-link" onclick="requestService()" data-x="{{ service.user.id }}" data-y="{{ service.id }}">Request This Service</a>
+    {% endif %}
+  </div>
+</div>
+
+<div>
+  {% if reviews %}
+    <h3>{{ service.total_reviews }} Reviews:</h3>
+    {% for review in reviews %}
+      <div class="card">
+        <div class="card-body">
+          <h6 class="card-subtitle mb-2 text-body-secondary">@{{ review.reviewer.get_full_name }} says:</h6>
+          <p class="card-text">{{ review.comment }}</p>
+        </div>
+      </div>
+    {% endfor %}
+
+    <div class="pagination-wrapper">
+      <div class="pagination">
+        <span class="step-links">
+          {% if reviews.has_previous %}
+            <a href="?page={{ reviews.previous_page_number }}">Previous</a>
+          {% endif %}
+
+          {% if reviews.has_next %}
+            <a href="?page={{ reviews.next_page_number }}">Next</a>
+          {% endif %}
+        </span>
+      </div>
+    </div>
+  {% else %}
+    <p>Be the first to add a review</p>
+  {% endif %}
+</div>
+
+<!-- Add Review Modal -->
+<div class="modal fade" id="addReviewModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h1 class="modal-title fs-5" id="exampleModalLabel">Add Review</h1>
+        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+      </div>
+      <div class="modal-body" id="modal_body">
+        <input type='hidden' id='service_id' value="{{ service.id }}" />
+        <div class="input-group mb-3">
+          <select class="form-select" aria-label="Default select example" name="rating" required>
+            <option disabled selected>Select A Rating Between 1 To 5</option>
+            <option value="1.0">1</option>
+            <option value="2.0">2</option>
+            <option value="3.0">3</option>
+            <option value="4.0">4</option>
+            <option value="5.0">5</option>
+          </select>
+        </div>
+
+        <div class="input-group mb-3">
+          <span class="input-group-text">
+            <i class="fa-solid fa-pencil"></i>
+          </span>
+          <textarea name="comment" placeholder="Write your review in 150 characters ..." class="form-control" aria-label="With textarea" maxlength="150" rows="5" cols="8" required></textarea>
+        </div>
+      </div>
+      <div class="modal-footer" id="modalFooter">
+        <button type="button" class="btn btn-primary" onclick="addReviews()">Add Review</button>
+      </div>
+    </div>
+  </div>
+</div>
+{% endblock content %}
+
+{% block js %}
+  <script src="{% static 'js/addReviews.js' %}"></script>
+  <script src="{% static 'js/displayRating.js' %}"></script>
+  <script src="{% static 'js/requestService.js' %}"></script>
+  <script>
+    document.addEventListener('DOMContentLoaded', function() {
+      const averageRating = {{ service.average_rating|default:0 }};
+      displayRating(averageRating);
+    })    
+  </script>
+{% endblock js %}

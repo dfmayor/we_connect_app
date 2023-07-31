@@ -1,0 +1,64 @@
+{% extends 'users/base.html' %}
+
+{% block title %}Register Page{% endblock title %}
+
+{% block header %}
+  <h2 class="text-center">Sign Up Form</h2>
+  {% if messages %}
+    {% for message in messages %}
+      <div {% if message.tags %} class="alert alert-{{ message.tags }}"{% endif %} role="alert">
+        <p class="text-center">{{ message }}</p>
+      </div>
+    {% endfor %}
+  {% endif %}
+
+{% endblock header %}
+
+{% block content %}
+  <form action="" method="post">
+    {% csrf_token %}
+    <div class="input-group mb-3">
+      <span class="input-group-text">
+        <i class="fa-solid fa-envelope"></i>
+      </span>
+      <input type="email" name="email" class="form-control" placeholder="Enter Your Email Address" required>
+    </div>
+
+    <div class="input-group mb-3">
+      <span class="input-group-text">
+        <i class="fa-solid fa-person"></i>
+      </span>
+      <input type="text" name="username" class="form-control" placeholder="Enter Your Username" required>
+    </div>
+
+    <div class="input-group mb-3">
+      <span class="input-group-text">
+        <i class="fa-solid fa-user"></i>
+      </span>
+      <input type="text" name="first_name" class="form-control" placeholder="Enter Your First Name" required>
+    </div>
+
+    <div class="input-group mb-3">
+      <span class="input-group-text">
+        <i class="fa-solid fa-user"></i>
+      </span>
+      <input type="text" name="last_name" class="form-control" placeholder="Enter Your Last Name" required>
+    </div>
+
+    <div class="input-group mb-3">
+      <span class="input-group-text">
+        <i class="fa-solid fa-lock"></i>
+      </span>
+      <input type="password" name="password" class="form-control" placeholder="Enter Your Password" required>
+    </div>
+
+    <div class="input-group mb-3">
+      <span class="input-group-text">
+        <i class="fa-solid fa-lock"></i>
+      </span>
+      <input type="password" name="password1" class="form-control" placeholder="Confirm Your Password" required>
+    </div>
+
+    <button type="submit" class="btn btn-success">Register</button>
+  </form>
+{% endblock content %}

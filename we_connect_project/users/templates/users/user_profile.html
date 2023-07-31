@@ -1,0 +1,91 @@
+{% extends 'users/base.html' %}
+{% load static %}
+
+{% block title %}User Profile{% endblock title %}
+
+{% block header %}
+  <h2 class="text-center">Add Your Profile</h2>
+  {% if messages %}
+    <div class="alert {% if messages.tags == 'error' %}alert-danger{% else %}alert-success{% endif %}" role="alert">
+      {% for message in messages %}
+        <p class="text-center">{{ message }}</p>
+      {% endfor %}
+    </div>
+  {% endif %}
+{% endblock header %}
+
+{% block content %}
+  <form action="" method="post" enctype="multipart/form-data">
+    {% csrf_token %}
+      <input type='hidden' id="user_id" value="{{ request.user.id }}" />
+      <div class="input-group mb-3">
+        <select class="form-select" aria-label="Default select example" name="i_am_a">
+          <option disabled selected>I Am A</option>
+          {% for group in groups %}
+            <option value="{{ group }}">{{ group }}</option>
+          {% endfor %}
+        </select>
+      </div>
+
+    <div class="input-group">
+      <span class="input-group-text">
+        <i class="fa-solid fa-info"></i>
+      </span>
+      <textarea name="bio" id="my-textarea" maxlength="150" oninput="countCharacters()" placeholder="Write something about yourself in 150 characters ..." class="form-control" aria-label="With textarea" rows="5" cols="8"></textarea>
+    </div>
+      <p id="characterCount"></p>
+
+    <div class="input-group mb-3">
+      <span class="input-group-text">
+        <i class="fa-solid fa-phone"></i>
+      </span>
+      <input type="text" name="phone_number" class="form-control" placeholder="Enter Your Phone Number" required>
+    </div>
+
+      <div class="input-group mb-3">
+        <select class="form-select" aria-label="Default select example" name="gender">
+          <option disabled selected>Gender</option>
+          <option value="Male">Male</option>
+          <option value="Female">Female</option>
+        </select>
+      </div>
+
+    <div class="input-group mb-3">
+      <input type="file" id="image-input" accept="image/*" name="profile_pics" >
+    </div>
+
+    <div class="input-group mb-3 image-style">
+      <div id="image-preview"></div>
+    </div>
+
+    <div class="input-group mb-3">
+      <span class="input-group-text">
+        <i class="fa-solid fa-briefcase"></i>
+      </span>
+      <input type="text" name="occupation" class="form-control" placeholder="What is your occupation?" required>
+    </div>
+
+    <div class="input-group mb-3">
+      <span class="input-group-text">
+        <i class="fa-solid fa-location-dot"></i>
+      </span>
+      <input type="text" name="address" class="form-control" placeholder="Your Address" required>
+    </div>
+
+    {% comment %} <p>Add Educational Qualification <span><i class="fa-solid fa-plus"></i></span></p> {% endcomment %}
+    <div id="educationalQualifications">
+      
+    </div>
+
+    <button id="add" class="btn btn-success" type="button" onclick="addQualification()">Add Educational Qualification</button> | 
+    <button id='saveEdu' class="btn btn-success" type="button" onclick="saveEducation()" style="display: none;">Save And Continue</button> |
+    <button id="createPro" type="submit" class="btn btn-success">Create Profile</button>
+  </form>
+
+{% endblock content %}
+
+{% block js %}
+  <script src="{% static 'js/image_preview.js' %}"></script>
+  <script src="{% static 'js/addQualification.js' %}"></script>
+  <script src="{% static 'js/countCharacters.js' %}"></script>
+{% endblock js %}
