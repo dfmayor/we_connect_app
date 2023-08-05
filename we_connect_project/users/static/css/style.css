@@ -98,3 +98,13 @@ h5 .card-title {
   display: flex;
   justify-content: flex-end;
 }
+
+a#category_link {
+  text-decoration: none !important;
+}
+#btn_link:hover {
+  background-color: black;
+}
+a#category_link:hover {
+  color: #fff;
+}

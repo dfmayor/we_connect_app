@@ -100,3 +100,22 @@ class Order(models.Model):
 
     def __str__(self):
         return f'Contract between buyer "{self.buyer.user.username}" and seller "{self.seller.user.username}"'
+
+
+class DirectMessage(models.Model):
+    id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
+    sender = models.ForeignKey(User, on_delete=models.CASCADE, related_name='sent_messages')
+    receiver = models.ForeignKey(User, on_delete=models.CASCADE, related_name='received_messages')
+    service = models.ForeignKey(Service, on_delete=models.CASCADE)
+    message = models.TextField()
+    is_read = models.BooleanField(default=False)
+    timestamp = models.DateTimeField(auto_now_add=True)
+
+    class Meta:
+        ordering = ['timestamp']
+
+    def formatted_timestamp(self):
+        return self.timestamp.strftime('%I:%M%p %A %d %B, %Y')
+
+    def __str__(self):
+        return f"From: {self.sender.username}, To: {self.receiver.username}, Sent at: {self.formatted_timestamp()}"

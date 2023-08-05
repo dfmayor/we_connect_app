@@ -8,6 +8,7 @@ function requestService() {
     const reqBtn = document.getElementById("requestLink");
     const sellerId = reqBtn.getAttribute('data-x');
     const serviceId = reqBtn.getAttribute('data-y');
+    const title = document.getElementById("serviceTitle").textContent;
 
     fetch('/services/request_service/', {
         method: 'POST',
@@ -16,7 +17,7 @@ function requestService() {
             'X-CSRFToken': getCookie('csrftoken'),
         },
         body: JSON.stringify({
-            seller_id: sellerId, service_id: serviceId
+            seller_id: sellerId, service_id: serviceId, service_title: title
         })
     })
     .then(response => response.json())

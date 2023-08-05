@@ -4,6 +4,11 @@ function getCookie(name) {
     if (parts.length === 2) return parts.pop().split(';').shift();
 }
 
+var closeBtn = document.getElementById('closeBtn');
+    closeBtn.addEventListener('click', function() {
+    location.reload();
+})
+
 function addReviews() {
     const rating = document.querySelector('select[name="rating"]').value;
     const comment = document.querySelector('textarea[name="comment"]').value;

@@ -3,11 +3,12 @@ from django.contrib import messages
 from django.contrib.auth.decorators import login_required
 from django.http import HttpResponseRedirect, JsonResponse
 from django.shortcuts import render
-from .models import Category, Order, Review, Service
+from .models import Category, DirectMessage, Order, Review, Service
 from .decorators import service_providers_only
 from users.decorators import superuser_required
 from django.core.paginator import Paginator
 from django.db.models import Avg
+from users.models import CustomUser as User, UserProfile
 
 @login_required
 @superuser_required
@@ -74,6 +75,18 @@ def service_details(request, id):
     return render(request, 'services/service_deatils.html', context)
 
 
+def category_services(request, category_id):
+    category = Category.objects.get(id=category_id)
+    services = Service.objects.all()
+    get_services = [service for service in services if category in service.category.all()]
+    context = {
+        'category': category,
+        'services': get_services,
+        'services_length': len(get_services)
+    }
+
+    return render(request, 'services/category_services.html', context)
+
 @login_required
 def add_review(request):
     if request.method == 'POST':
@@ -94,23 +107,32 @@ def add_review(request):
 
 @login_required
 def request_service(request):
+    buyer = request.user.userprofile
     if request.method == 'POST':
         try:
             data = json.loads(request.body)
             seller_id = data.get('seller_id')
-            buyer = request.user.userprofile
+            service_title = data.get('service_title')
             service_id = data.get('service_id')
+            receiver = User.objects.get(id=seller_id)
+            seller = UserProfile.objects.get(user=receiver)
+            service = Service.objects.get(id=service_id)
+            message = f'{request.user.username} requested your service "{service_title}"'
             if Order.objects.filter(buyer=buyer, service_id=service_id).exists():
-                return JsonResponse({'status': 'error', 'message': 'Order already existed'})
+                return JsonResponse({'status': 'error', 'message': 'Order already exists'})
             Order.objects.create(
-                seller_id=seller_id, buyer=buyer, service_id=service_id
+                seller=seller, buyer=buyer, service=service
+            )
+            # create direct message
+            DirectMessage.objects.create(
+                sender=request.user, receiver=receiver, service=service, message=message
             )
             return JsonResponse({'status': 'success', 'message': 'Order Created Successfully'})
         except Exception as e:
             return JsonResponse({'status': 'error', 'message': str(e)}, status=400)
     return JsonResponse({'status': "error", 'message': 'Failed to request order'})
 
-
+@login_required
 def get_home_services(request):
     services = Service.objects.order_by('created').all()
     service_list = []
@@ -151,3 +173,12 @@ def get_home_services(request):
         service_list.append(service_data)
 
     return JsonResponse({'services': service_list})
+
+@login_required
+def update_is_read(request, id):
+    if request.method == 'POST':
+        message = DirectMessage.objects.get(service__id=id)
+        message.is_read = True
+        message.save()
+        return JsonResponse({'status': 'success', 'message': "message updated successfully"})
+    return JsonResponse({'status': 'error', 'message': "invalid response"})

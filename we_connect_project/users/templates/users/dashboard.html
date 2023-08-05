@@ -34,27 +34,32 @@
       <div class="container text-center">
         <div class="row">
           {% for service in services %}
-            <div class="col">
-              <a href="{% url 'services:service_details' service.id %}">
-                <div class="card mb-2" style="width: 15rem;">
-                  <img src="{{ service.picture.url }}" class="card-img-top service_image" alt="...">
-                  <div style="display: flex; flex-grow: 1; justify-content: space-between; align-items: center;">
+          <div class="col">
+            <a class="link-underline-light link-dark" href="{% url 'services:service_details' service.id %}">
+              <div class="card mb-2" style="width: 15rem;">
+                <img src="{{ service.picture.url }}" class="card-img-top service_image" alt="...">
+                <div style="display: flex; flex-grow: 1; justify-content: space-between; align-items: center;">
+                  <div style="display: flex; flex-direction: row;">
                     <img src="{{ service.user.profile_pics.url }}" alt="Profile Picture" style="width: 40px; height: 40px; border-radius: 50%; margin-right: 10px;">
                     <h6 class="card-subtitle text-body-secondary">{{ service.user.user.username}}</h6>
-                    <h6 class="card-subtitle text-body-secondary">Level {{ service.user.level }}</h6>        
                   </div>
-                  <div class="card-body">
-                    <h6 class="card-title">{{ service.title }}</h6>
-                    <div style="display: flex; justify-content: space-between;">
-                      <h6 class="card-subtitle text-body-secondary text-start">{{ service.user.user.username}}</h6>
-                      <h6 class="card-subtitle text-body-secondary text-end">{{ service.user.level }}</h6>
-                    </div>
-                    <a href="#" class="card-link">Card link</a>
-                    <a href="#" class="card-link">Another link</a>
-                  </div>
+                  <h6 class="card-subtitle text-body-secondary">Level {{ service.user.level }}</h6>        
                 </div>
-              </a>
-            </div>
+                <div class="card-body">
+                  <h6 class="card-title">{{ service.title }}</h6>
+                  <div style="display: flex; justify-content: space-between;">
+                    <div style="display: flex; flex-direction: row;">
+                      <p class="card-subtitle text-body-secondary text-start"><i class="fa-solid fa-star"></i></p>
+                      <p>{{ service.average_rating }} ({{ service.total_reviews }})</p>
+                    </div>
+                    <p><strong>From <i class="fa-solid fa-naira-sign"></i>{{ service.price }}</strong></p>
+                  </div>
+                  <a href="#" class="card-link">Card link</a>
+                  <a href="#" class="card-link">Another link</a>
+                </div>
+              </div>
+            </a>
+          </div>
           {% endfor %}
         </div>
       </div>

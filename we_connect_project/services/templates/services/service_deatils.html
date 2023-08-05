@@ -17,7 +17,7 @@
 <div class=" container card">
   <img src="{{ service.picture.url }}" class="card-img-top" alt="..." style="height: 600px; object-fit: cover;">
   <div class="card-body">
-    <h5 class="card-title">{{ service.title}}</h5>
+    <h5 class="card-title" id='serviceTitle'>{{ service.title}}</h5>
     <div style="display: flex; justify-content: space-between;">
       <h6 class="card-subtitle text-body-secondary text-start">{{ service.user.user.username}}</h6>
       <div style="display: flex; flex-direction: row;">
@@ -25,13 +25,19 @@
         <p>{{ service.average_rating }} ({{ service.total_reviews }})</p>
       </div>
     </div>
-    <p class="card-text">Some quick example text to build on the card title and make up the bulk of the card's content.</p>
-    <a href="#" class="card-link" id="add_review" data-bs-toggle="modal" data-bs-target="#addReviewModal">Add Review</a>
-    {% if order_exists %}
-      <p class='card-link'>Service Requested</p>
-    {% else %}
-      <a href="#" id="requestLink" class="card-link" onclick="requestService()" data-x="{{ service.user.id }}" data-y="{{ service.id }}">Request This Service</a>
-    {% endif %}
+    <p class="card-text">{{ service.description }}</p>
+    <div style="display: flex; flex-direction: row; justify-content: space-between;">
+      <a href="#" class="card-link" id="add_review" data-bs-toggle="modal" data-bs-target="#addReviewModal">Add Review</a>
+      {% if service.user != request.user.userprofile %}
+        {% if order_exists %}
+          <p class='card-link'>Service Requested</p>
+        {% else %}
+          <a href="#" id="requestLink" class="card-link" onclick="requestService()" data-x="{{ service.user.user.id }}" data-y="{{ service.id }}">Request This Service</a>
+        {% endif %}
+      {% else %}
+        <p> Add number of orders</p>
+      {% endif %}
+    </div>
   </div>
 </div>
 
@@ -71,7 +77,7 @@
     <div class="modal-content">
       <div class="modal-header">
         <h1 class="modal-title fs-5" id="exampleModalLabel">Add Review</h1>
-        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+        <button type="button" id="closeBtn" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
       </div>
       <div class="modal-body" id="modal_body">
         <input type='hidden' id='service_id' value="{{ service.id }}" />
